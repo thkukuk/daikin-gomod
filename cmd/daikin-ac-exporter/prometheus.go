@@ -91,13 +91,13 @@ var (
 
         stemp = prometheus.NewDesc(
                 prometheus.BuildFQName(namespace, "", "stemp"),
-                "control info, stemp",
+                "control info, target temperature (stemp)",
                 []string{"target"}, nil,
         )
 
         shum = prometheus.NewDesc(
                 prometheus.BuildFQName(namespace, "", "shum"),
-                "control info, shum",
+                "control info, target humidity (shum)",
                 []string{"target"}, nil,
         )
 
@@ -205,7 +205,7 @@ var (
 
         f_rate = prometheus.NewDesc(
                 prometheus.BuildFQName(namespace, "", "f_rate"),
-                "control info, f_rate",
+                "control info, fan rate mode (f_rate)",
                 []string{"target"}, nil,
         )
 
@@ -265,7 +265,7 @@ var (
 
         f_dir = prometheus.NewDesc(
                 prometheus.BuildFQName(namespace, "", "f_dir"),
-                "control info, f_dir",
+                "control info, fan direction (f_dir)",
                 []string{"target"}, nil,
         )
 
