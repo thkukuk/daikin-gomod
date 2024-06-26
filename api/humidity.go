@@ -17,12 +17,12 @@ func (h *Humidity) setUrlValues(v url.Values) {
 }
 
 func (h *Humidity) decode(param string, v string) error {
-	if v == "-" {
+	if v == "--" || v == "-" {
 		v = "-1"
 	}
 	val, err := strconv.Atoi(v)
 	if err != nil {
-		return fmt.Errorf("error parsing %s=%s: %v", param, v, err)
+		return fmt.Errorf("Humidity: error parsing %s=%s: %v", param, v, err)
 	}
 	*h = Humidity{value: int32(val), param: param}
 	return nil
@@ -38,4 +38,3 @@ func (h *Humidity) String() string {
 func (h *Humidity) Float64() float64 {
 	return float64(h.value)
 }
-
