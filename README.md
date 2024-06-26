@@ -2,6 +2,23 @@
 
 This package provides a go library to query and control Daikin AirConditioner, an application to print all current settings and an Exporter for Prometheus.
 
+## Features
+
+* Library
+  * Discover devices on the local network
+  * Query current sensor values
+  * Query power consumption of the current day
+  * Query and set current operating parameters
+* **daikin-ac-info**
+  * Discover devices on the local network if none specified
+  * Print current sensor data, power consumption and control options
+* **daikin-ac-exporter**
+  * Discover devices on the local network if none specified
+  * Export current sensor data, power consuption and control options as [Prometheus](https://prometheus.io) metrics
+
+
+## API/Library
+
 ## Container
 
 ### Public Container Image
