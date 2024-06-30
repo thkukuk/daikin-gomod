@@ -2,7 +2,6 @@ package daikin
 
 import (
         "fmt"
-        "net/url"
         "strconv"
 )
 
@@ -31,8 +30,8 @@ var modeMap = map[Mode]string{
 	ModeAuto7:      "Auto",
 }
 
-func (m *Mode) setUrlValues(v url.Values) {
-	v.Set("mode", strconv.Itoa(int(*m)))
+func (m *Mode) setUrlValues() string {
+	return "mode=" + strconv.Itoa(int(*m))
 }
 
 func (m *Mode) decode(s string) error {

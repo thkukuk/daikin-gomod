@@ -2,7 +2,6 @@ package daikin
 
 import (
 	"fmt"
-        "net/url"
 	"strconv"
 )
 
@@ -11,8 +10,8 @@ type KWattHours struct {
 	param string
 }
 
-func (w *KWattHours) setUrlValues(v url.Values) {
-	return
+func (w *KWattHours) setUrlValues() string {
+	return ""
 }
 
 func (w *KWattHours) decode(param string, v string) error {

@@ -14,8 +14,8 @@ func (n *Name) String() string {
 	return n.value
 }
 
-func (n *Name) setUrlValues(v url.Values) {
-	v.Set(n.param, url.PathEscape(n.String()))
+func (n *Name) setUrlValues() string {
+	return n.param + "=" + url.PathEscape(n.String())
 }
 
 func (n *Name) decode(param string, s string) error {

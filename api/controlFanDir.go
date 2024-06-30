@@ -2,7 +2,6 @@ package daikin
 
 import (
         "fmt"
-        "net/url"
         "strconv"
 )
 
@@ -24,8 +23,8 @@ var fanDirMap = map[FanDir]string{
 	FanDirBoth:       "Both",
 }
 
-func (f *FanDir) setUrlValues(v url.Values) {
-	v.Set("f_dir", strconv.Itoa(int(*f)))
+func (f *FanDir) setUrlValues() string {
+	return "f_dir=" + strconv.Itoa(int(*f))
 }
 
 func (f *FanDir) decode(s string) error {

@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
 )
@@ -33,8 +32,8 @@ const (
 
 /*
 type Parameter interface {
-	// Puts this Parameter's entry into the provided url.Values.
-	setUrlValues(v url.Values)
+	// String with name and value for URL
+	setUrlValues() string
 	// Set sets this parameter's value.
 	Set(string) error
 	// String returns the human readable value.
@@ -86,7 +85,7 @@ func (b *BasicInfo) populate(values map[string]string) error {
 		case "rev":
 			err = b.Revision.decode("rev", v)
 		case "type":
-			err = b.Type.decode("rev", v)
+			err = b.Type.decode("type", v)
 		case "ret":
 			if v != returnOk {
 				err = fmt.Errorf("device returned error ret=%s", v)
@@ -157,15 +156,14 @@ type ControlInfo struct {
 	Humidity Humidity
 }
 
-func (c *ControlInfo) urlValues() url.Values {
-	qStr := url.Values{}
-	c.Power.setUrlValues(qStr)
-	c.Mode.setUrlValues(qStr)
-	c.Fan.setUrlValues(qStr)
-	c.FanDir.setUrlValues(qStr)
-	c.Temperature.setUrlValues(qStr)
-	c.Humidity.setUrlValues(qStr)
-	return qStr
+func (c *ControlInfo) urlValues() string {
+	values := c.Power.setUrlValues();
+	values = values + "&" + c.Mode.setUrlValues()
+	values = values + "&" + c.Fan.setUrlValues()
+	values = values + "&" + c.FanDir.setUrlValues()
+	values = values + "&" + c.Temperature.setUrlValues()
+	values = values + "&" + c.Humidity.setUrlValues()
+	return values
 }
 
 func (c *ControlInfo) populate(values map[string]string) error {
@@ -291,8 +289,8 @@ func (d *Daikin) GetBasicInfo() error {
 
 // Set configures the current setting to the unit.
 func (d *Daikin) SetControlInfo() error {
-	qStr := d.ControlInfo.urlValues()
-	resp, err := http.PostForm(fmt.Sprintf("http://%s%s", d.Address, uriSetControlInfo), qStr)
+      	resp, err := http.Get(fmt.Sprintf("http://%s%s?%s", d.Address,
+	                      uriSetControlInfo, d.ControlInfo.urlValues()))
 	if err != nil {
 		return err
 	}

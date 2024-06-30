@@ -1,7 +1,6 @@
 package daikin
 
 import (
-        "net/url"
 )
 
 // String is a generic class for string values
@@ -14,8 +13,8 @@ func (s *String) String() string {
 	return s.value
 }
 
-func (s *String) setUrlValues(v url.Values) {
-	v.Set(s.param, s.String())
+func (s *String) setUrlValues() string {
+	return s.param + "=" + s.String()
 }
 
 func (s *String) decode(param string, str string) error {

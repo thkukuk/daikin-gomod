@@ -2,7 +2,6 @@ package daikin
 
 import (
         "fmt"
-        "net/url"
         "strconv"
 )
 
@@ -12,8 +11,8 @@ type Humidity struct {
         param string
 }
 
-func (h *Humidity) setUrlValues(v url.Values) {
-	v.Set(h.param, h.String())
+func (h *Humidity) setUrlValues() string {
+	return h.param + "=" + h.String()
 }
 
 func (h *Humidity) decode(param string, v string) error {

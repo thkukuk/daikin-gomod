@@ -2,7 +2,6 @@ package daikin
 
 import (
 	"fmt"
-	"net/url"
 	"strconv"
 )
 
@@ -20,8 +19,8 @@ var powerMap = map[Power]string{
 	PowerOn:  "On",
 }
 
-func (p *Power) setUrlValues(v url.Values) {
-	v.Set("pow", strconv.Itoa(int(*p)))
+func (p *Power) setUrlValues() string {
+	return "pow=" + strconv.Itoa(int(*p))
 }
 
 func (p *Power) decode(s string) error {

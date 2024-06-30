@@ -1,7 +1,6 @@
 package daikin
 
 import (
-        "net/url"
         "strings"
 )
 
@@ -15,8 +14,8 @@ func (v *Version) String() string {
 	return v.value
 }
 
-func (v *Version) setUrlValues(s url.Values) {
-	s.Set(v.param, v.String())
+func (v *Version) setUrlValues() string {
+	return v.param + "=" + v.String()
 }
 
 func (v *Version) decode(param string, s string) error {

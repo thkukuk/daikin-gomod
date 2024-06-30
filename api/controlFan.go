@@ -3,7 +3,6 @@ package daikin
 import (
         "fmt"
 	"math"
-        "net/url"
         "strconv"
 )
 
@@ -31,8 +30,8 @@ var fanMap = map[Fan]string{
 	Fan5:      "5",
 }
 
-func (f *Fan) setUrlValues(v url.Values) {
-	v.Set("f_rate", string(*f))
+func (f *Fan) setUrlValues() string {
+	return "f_rate=" + string(*f)
 }
 
 func (f *Fan) decode(s string) error {

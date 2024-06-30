@@ -2,7 +2,6 @@ package daikin
 
 import (
         "fmt"
-        "net/url"
         "strconv"
 )
 
@@ -12,8 +11,8 @@ type Temperature struct {
 	param string
 }
 
-func (t *Temperature) setUrlValues(v url.Values) {
-	v.Set(t.param, t.String())
+func (t *Temperature) setUrlValues() string {
+     	return t.param + "=" + t.String()
 }
 
 func (t *Temperature) decode(param string, v string) error {
