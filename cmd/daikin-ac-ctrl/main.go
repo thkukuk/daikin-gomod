@@ -34,13 +34,76 @@ type ConfigType struct {
 	Address string `yaml:"address,omitempty"`
 }
 
+const (
+        CmdDevStatus int = 1
+	CmdPowerOn int = 2
+	CmdPowerOff int = 3
+)
+
 var (
         Version = "unreleased"
         Quiet   = false
         Verbose = false
 	configFile = "config.yaml"
 	address string
+	
+	// daikinAcCtrlCmd represents the daikin-ac-ctrl command
+	daikinAcCtrlCmd = &cobra.Command {
+		Use:   "daikin-ac-ctrl",
+		Short: "Control Daikin AC devices",
+		Long: `Searches for Daikin Air Conditioners and manage them.`,
+		Args:  cobra.ExactArgs(0),
+	}
 )
+
+func init() {
+        daikinAcCtrlCmd.Version = Version
+
+	daikinAcCtrlCmd.PersistentFlags().StringVarP(&address, "address", "a", "", "Daikin aircon address")
+	daikinAcCtrlCmd.PersistentFlags().StringVarP(&configFile, "config", "c", configFile, "configuration file")
+
+	daikinAcCtrlCmd.PersistentFlags().BoolVarP(&Quiet, "quiet", "q", Quiet, "don't print any informative messages")
+	daikinAcCtrlCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", Verbose, "become really verbose in printing messages")
+
+	daikinAcCtrlCmd.AddCommand(
+	        DevStatusCmd(),
+		PowerOnCmd(),
+		PowerOffCmd(),
+	)
+}
+
+func DevStatusCmd() *cobra.Command {
+        var subCmd = &cobra.Command {
+                Use:   "status",
+                Short: "Current status of daikin aircon",
+                Run:   devStatus,
+                Args:  cobra.ExactArgs(0),
+        }
+
+        return subCmd
+}
+
+func PowerOnCmd() *cobra.Command {
+        var subCmd = &cobra.Command {
+                Use:   "on",
+                Short: "Power on daikin aircon",
+                Run:   powerOn,
+                Args:  cobra.ExactArgs(0),
+        }
+
+        return subCmd
+}
+
+func PowerOffCmd() *cobra.Command {
+        var subCmd = &cobra.Command {
+                Use:   "off",
+                Short: "Power off daikin aircon",
+                Run:   powerOff,
+                Args:  cobra.ExactArgs(0),
+        }
+
+        return subCmd
+}
 
 func read_yaml_config(conffile string) (ConfigType, error) {
 
@@ -62,31 +125,25 @@ func read_yaml_config(conffile string) (ConfigType, error) {
         return config, nil
 }
 
-
 func main() {
-	// daikinAcInfoCmd represents the daikin-info command
-	daikinAcInfoCmd := &cobra.Command{
-		Use:   "daikin-ac-info",
-		Short: "Prints all Daikin AC values",
-		Long: `Searches for Daikin Air Conditioners and dumps all available infos.`,
-		Run: runDaikinAcInfoCmd,
-		Args:  cobra.ExactArgs(0),
-	}
-
-        daikinAcInfoCmd.Version = Version
-
-	daikinAcInfoCmd.Flags().StringVarP(&address, "address", "a", "", "Daikin aircon address")
-	daikinAcInfoCmd.Flags().StringVarP(&configFile, "config", "c", configFile, "configuration file")
-
-	daikinAcInfoCmd.Flags().BoolVarP(&Quiet, "quiet", "q", Quiet, "don't print any informative messages")
-	daikinAcInfoCmd.Flags().BoolVarP(&Verbose, "verbose", "v", Verbose, "become really verbose in printing messages")
-
-	if err := daikinAcInfoCmd.Execute(); err != nil {
+	if err := daikinAcCtrlCmd.Execute(); err != nil {
                 os.Exit(1)
         }
 }
 
-func runDaikinAcInfoCmd(cmd *cobra.Command, args []string) {
+func devStatus(cmd *cobra.Command, args []string) {
+        runDaikinAcCtrlCmd(CmdDevStatus)
+}
+
+func powerOn(cmd *cobra.Command, args []string) {
+        runDaikinAcCtrlCmd(CmdPowerOn)
+}
+
+func powerOff(cmd *cobra.Command, args []string) {
+        runDaikinAcCtrlCmd(CmdPowerOff)
+}
+
+func runDaikinAcCtrlCmd(cmd int) {
 
 	if !Quiet {
 		log.Infof("Read yaml config %q\n", configFile)
@@ -101,7 +158,7 @@ func runDaikinAcInfoCmd(cmd *cobra.Command, args []string) {
         }
 
 	if !Quiet {
-                log.Infof("Daikin AC Info %s\n", Version)
+                log.Infof("Daikin AC Ctrl %s\n", Version)
         }
 
         quit := make(chan os.Signal, 1)
@@ -143,6 +200,24 @@ func runDaikinAcInfoCmd(cmd *cobra.Command, args []string) {
                         log.Error(err)
                         continue
                 }
-		fmt.Printf("Current %s:\n%s\n", target, d)
+		
+		switch cmd {
+    		case CmdDevStatus:
+			fmt.Printf("Current %s:\n%s\n", target, d)
+    		case CmdPowerOn:
+			fmt.Printf("Switching %s on\n", target)
+	             	d.ControlInfo.Power = daikin.PowerOn
+     	 	     	if err := d.SetControlInfo(); err != nil {
+	       	     	       log.Error(err)
+               		       os.Exit(1)
+         		}
+		case CmdPowerOff:
+			fmt.Printf("Switching %s off\n", target)
+	             	d.ControlInfo.Power = daikin.PowerOff
+     	 	     	if err := d.SetControlInfo(); err != nil {
+	       	     	       log.Error(err)
+               		       os.Exit(1)
+         		}
+    		}
 	}
 }

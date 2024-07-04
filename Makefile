@@ -1,5 +1,5 @@
 DACE_BIN := bin/daikin-ac-exporter
-DACI_BIN := bin/daikin-ac-info
+DACC_BIN := bin/daikin-ac-ctrl
 
 GO ?= go
 
@@ -24,10 +24,10 @@ vendor: dep ## Create vendor directory
 
 build: ## Build the binary files
 	$(GO) build -v -o $(DACE_BIN) $(USE_VENDOR) $(LOCAL_LDFLAGS) ./cmd/daikin-ac-exporter
-	$(GO) build -v -o $(DACI_BIN) $(USE_VENDOR) $(LOCAL_LDFLAGS) ./cmd/daikin-ac-info
+	$(GO) build -v -o $(DACC_BIN) $(USE_VENDOR) $(LOCAL_LDFLAGS) ./cmd/daikin-ac-ctrl
 
 clean: ## Remove previous builds
-	@rm -f $(DACE_BIN) $(DACI_BIN)
+	@rm -f $(DACE_BIN) $(DACC_BIN)
 
 help: ## Display this help screen
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
