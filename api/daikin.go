@@ -289,8 +289,9 @@ func (d *Daikin) GetBasicInfo() error {
 
 // Set configures the current setting to the unit.
 func (d *Daikin) SetControlInfo() error {
-      	resp, err := http.Get(fmt.Sprintf("http://%s%s?%s", d.Address,
-	                      uriSetControlInfo, d.ControlInfo.urlValues()))
+	url := fmt.Sprintf("http://%s%s?%s", d.Address,
+                           uriSetControlInfo, d.ControlInfo.urlValues())
+	resp, err := http.Get(url)
 	if err != nil {
 		return err
 	}

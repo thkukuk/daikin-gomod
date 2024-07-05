@@ -46,6 +46,8 @@ var (
         Verbose = false
 	configFile = "config.yaml"
 	address string
+	// Power On
+	newTemperature string
 	
 	// daikinAcCtrlCmd represents the daikin-ac-ctrl command
 	daikinAcCtrlCmd = &cobra.Command {
@@ -90,6 +92,8 @@ func PowerOnCmd() *cobra.Command {
                 Run:   powerOn,
                 Args:  cobra.ExactArgs(0),
         }
+
+	subCmd.PersistentFlags().StringVarP(&newTemperature, "temperature", "t", "", "Target temperature")
 
         return subCmd
 }
@@ -207,6 +211,9 @@ func runDaikinAcCtrlCmd(cmd int) {
     		case CmdPowerOn:
 			fmt.Printf("Switching %s on\n", target)
 	             	d.ControlInfo.Power = daikin.PowerOn
+			if len(newTemperature) > 0 {
+			       d.ControlInfo.Temperature.Set(newTemperature)
+			}
      	 	     	if err := d.SetControlInfo(); err != nil {
 	       	     	       log.Error(err)
                		       os.Exit(1)

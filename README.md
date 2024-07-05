@@ -13,6 +13,7 @@ This package provides a go library to query and control Daikin AirConditioner, a
   * Discover devices on the local network if none specified
   * Print current sensor data, power consumption and control options
   * Power on and off
+  * Set target temperatur
 * **daikin-ac-exporter**
   * Discover devices on the local network if none specified
   * Export current sensor data, power consuption and control options as [Prometheus](https://prometheus.io) metrics

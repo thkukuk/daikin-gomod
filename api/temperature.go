@@ -29,6 +29,10 @@ func (t *Temperature) decode(param string, v string) error {
 	return nil
 }
 
+func (t *Temperature) Set(v string) error {
+	return t.decode(t.param, v)
+}
+
 func (t *Temperature) String() string {
         if t.value == -1 {
                 return "N/A"
