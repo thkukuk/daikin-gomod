@@ -26,8 +26,8 @@ var modeMap = map[Mode]string{
 	ModeHeat:       "Heat",
 	ModeFan:        "Fan",
 	ModeAuto:       "Auto",
-	ModeAuto1:      "Auto",
-	ModeAuto7:      "Auto",
+	ModeAuto1:      "Auto (1)",
+	ModeAuto7:      "Auto (7)",
 }
 
 func (m *Mode) setUrlValues() string {
