@@ -34,7 +34,7 @@ func (f *Fan) setUrlValues() string {
 	return "f_rate=" + string(*f)
 }
 
-func (f *Fan) decode(s string) error {
+func (f *Fan) Decode(s string) error {
 	// check if value is supported
 	if _, ok := fanMap[Fan(s)]; !ok {
 		return fmt.Errorf("unknown pwr value: %s", s)

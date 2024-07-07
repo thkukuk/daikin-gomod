@@ -173,13 +173,13 @@ func (c *ControlInfo) populate(values map[string]string) error {
 		case "pow":
 			err = c.Power.decode(v)
 		case "mode":
-			err = c.Mode.decode(v)
+			err = c.Mode.Decode(v)
 		case "stemp":
 			err = c.Temperature.decode("stemp", v)
 		case "shum":
 			err = c.Humidity.decode("shum", v)
 		case "f_rate":
-			err = c.Fan.decode(v)
+			err = c.Fan.Decode(v)
 		case "f_dir":
 			err = c.FanDir.decode(v)
 		case "ret":

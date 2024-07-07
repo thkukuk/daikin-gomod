@@ -34,7 +34,7 @@ func (m *Mode) setUrlValues() string {
 	return "mode=" + strconv.Itoa(int(*m))
 }
 
-func (m *Mode) decode(s string) error {
+func (m *Mode) Decode(s string) error {
 	v, err := strconv.Atoi(s)
 	if err != nil {
 		return fmt.Errorf("invalid mode value: %s (err=%v)", s, err)

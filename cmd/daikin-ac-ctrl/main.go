@@ -48,6 +48,8 @@ var (
 	address string
 	// Power On
 	newTemperature string
+	newMode string
+	newFan string
 	
 	// daikinAcCtrlCmd represents the daikin-ac-ctrl command
 	daikinAcCtrlCmd = &cobra.Command {
@@ -94,6 +96,8 @@ func PowerOnCmd() *cobra.Command {
         }
 
 	subCmd.PersistentFlags().StringVarP(&newTemperature, "temperature", "t", "", "Target temperature")
+	subCmd.PersistentFlags().StringVarP(&newMode, "mode", "m", "", "Operating mode (0=Auto, 2=Dehumidify, 3=Cool, 4=Heat, 6=Fan)")
+	subCmd.PersistentFlags().StringVarP(&newFan, "fan", "f", "", "Fan speed (A=Auto, B=Silent, 3=Fan1, 4=Fan2, 5=Fan3, 6=Fan4, 7=Fan5)")
 
         return subCmd
 }
@@ -212,18 +216,33 @@ func runDaikinAcCtrlCmd(cmd int) {
 			fmt.Printf("Switching %s on\n", target)
 	             	d.ControlInfo.Power = daikin.PowerOn
 			if len(newTemperature) > 0 {
-			       d.ControlInfo.Temperature.Set(newTemperature)
+			        if err := d.ControlInfo.Temperature.Set(newTemperature); err != nil {
+			       	      log.Error(err)
+				      os.Exit(1)
+				}
+			}
+			if len(newMode) > 0 {
+			   	if err := d.ControlInfo.Mode.Decode(newMode); err != nil {
+			       	      log.Error(err)
+				      os.Exit(1)
+				}
+			}
+			if len(newFan) > 0 {
+			   	if err := d.ControlInfo.Fan.Decode(newFan); err != nil {
+			       	      log.Error(err)
+				      os.Exit(1)
+				}
 			}
      	 	     	if err := d.SetControlInfo(); err != nil {
-	       	     	       log.Error(err)
-               		       os.Exit(1)
+	       	     	       	log.Error(err)
+               			os.Exit(1)
          		}
 		case CmdPowerOff:
 			fmt.Printf("Switching %s off\n", target)
 	             	d.ControlInfo.Power = daikin.PowerOff
      	 	     	if err := d.SetControlInfo(); err != nil {
-	       	     	       log.Error(err)
-               		       os.Exit(1)
+	       	     	       	log.Error(err)
+               		        os.Exit(1)
          		}
     		}
 	}
